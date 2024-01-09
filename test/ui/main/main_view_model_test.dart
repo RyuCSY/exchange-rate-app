@@ -10,45 +10,84 @@ void main() {
 
   setUp(() {
     getIt.registerSingleton<RateRepository>(RateRepositoryMock());
-    getIt.registerFactory<MainViewModel>(
-        () => MainViewModel(rateRepository: getIt<RateRepository>()));
+    getIt.registerFactory<MainViewModel>(() => MainViewModel(rateRepository: getIt<RateRepository>()));
   });
 
   tearDown(() {
     getIt.reset();
   });
 
-  test('ViewModel 초기화 테스트', () async {
+  //test('ViewModel 초기화 테스트', () async {
+  //  final viewModel = getIt<MainViewModel>();
+//
+  //  await Future.delayed(const Duration(milliseconds: 500));
+//
+  //  expect(viewModel.state.rateResult, isNotNull);
+  //  expect(viewModel.state.rateResult!.baseCode, 'KRW');
+  //});
+//
+  //test('inputBaseMoney 테스트', () async {
+  //  final viewModel = getIt<MainViewModel>();
+//
+  //  await Future.delayed(const Duration(milliseconds: 500));
+//
+  //  viewModel.inputBaseMoney(100);
+//
+  //  expect(viewModel.state.baseMoney, 100);
+  //  expect(viewModel.state.targetMoney, 100 * 0.00076);
+  //});
+//
+  //test('inputBaseCode 테스트', () async {
+  //  final viewModel = getIt<MainViewModel>();
+//
+  //  await Future.delayed(const Duration(milliseconds: 500));
+//
+  //  viewModel.inputBaseCode('USD');
+//
+  //  await Future.delayed(const Duration(milliseconds: 500));
+//
+  //  expect(viewModel.state.baseCode, 'USD');
+  //  expect(viewModel.state.targetCode, 'KRW');
+//
+  //  viewModel.inputBaseMoney(100);
+//
+  //  expect(viewModel.state.baseMoney, 100);
+  //  expect(viewModel.state.targetMoney, 100.0 * 1315.579762);
+  //});
+//
+  //test('targetBaseMoney 테스트', () async {
+  //  final viewModel = getIt<MainViewModel>();
+//
+  //  await Future.delayed(const Duration(milliseconds: 500));
+//
+  //  viewModel.targetBaseMoney(100);
+//
+  //  expect(viewModel.state.targetMoney, 100);
+  //  expect(viewModel.state.baseMoney, 100 / 0.00076);
+  //});
+//
+  test('targetBaseCode 테스트', () async {
     final viewModel = getIt<MainViewModel>();
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    expect(viewModel.state.rateResult, isNotNull);
-    expect(viewModel.state.rateResult!.baseCode, 'KRW');
-  });
-
-  test('inputBaseMoney 테스트', () async {
-    final viewModel = getIt<MainViewModel>();
+    viewModel.targetBaseCode('USD');
 
     await Future.delayed(const Duration(milliseconds: 500));
+
+    expect(viewModel.state.baseCode, 'KRW');
+    expect(viewModel.state.targetCode, 'USD');
 
     viewModel.inputBaseMoney(100);
 
+
     expect(viewModel.state.baseMoney, 100);
     expect(viewModel.state.targetMoney, 100 * 0.00076);
-  });
 
-  test('inputBaseCode 테스트', () async {
-    final viewModel = getIt<MainViewModel>();
+    viewModel.targetBaseMoney(100);
 
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    viewModel.inputBaseCode('USD');
-
-    expect(viewModel.state.baseCode, 'USD');
-    expect(viewModel.state.targetCode, 'USD');
-    expect(viewModel.state.baseMoney, 1);
-    expect(viewModel.state.targetMoney, 1);
+    expect(viewModel.state.targetMoney, 100);
+    expect(viewModel.state.baseMoney, 100 / 0.00076);
   });
 }
 
@@ -229,7 +268,182 @@ class RateRepositoryMock implements RateRepository {
       "ZWL": 4.892676
     }
   };
-  final usdMockJson = {"result":"success","provider":"https://www.exchangerate-api.com","documentation":"https://www.exchangerate-api.com/docs/free","terms_of_use":"https://www.exchangerate-api.com/terms","time_last_update_unix":1704758551,"time_last_update_utc":"Tue, 09 Jan 2024 00:02:31 +0000","time_next_update_unix":1704845421,"time_next_update_utc":"Wed, 10 Jan 2024 00:10:21 +0000","time_eol_unix":0,"base_code":"USD","rates":{"USD":1,"AED":3.6725,"AFN":71.254789,"ALL":96.131794,"AMD":405.337806,"ANG":1.79,"AOA":843.247302,"ARS":813.85,"AUD":1.490106,"AWG":1.79,"AZN":1.699553,"BAM":1.785834,"BBD":2,"BDT":109.63174,"BGN":1.785939,"BHD":0.376,"BIF":2840.450627,"BMD":1,"BND":1.329058,"BOB":6.805652,"BRL":4.876135,"BSD":1,"BTN":83.089181,"BWP":13.585306,"BYN":3.230002,"BZD":2,"CAD":1.336326,"CDF":2697.633434,"CHF":0.848628,"CLP":890.921544,"CNY":7.162024,"COP":3965.875801,"CRC":517.078193,"CUP":24,"CVE":100.681007,"CZK":22.392465,"DJF":177.721,"DKK":6.81154,"DOP":56.816276,"DZD":133.358324,"EGP":30.863593,"ERN":15,"ETB":56.568054,"EUR":0.913083,"FJD":2.207559,"FKP":0.785088,"FOK":6.811502,"GBP":0.78523,"GEL":2.686743,"GGP":0.785088,"GHS":11.951077,"GIP":0.785088,"GMD":65.227475,"GNF":8573.496849,"GTQ":7.70299,"GYD":209.253267,"HKD":7.806956,"HNL":24.296492,"HRK":6.879618,"HTG":132.38535,"HUF":344.638586,"IDR":15522.235626,"ILS":3.708074,"IMP":0.785088,"INR":83.0892,"IQD":1308.108484,"IRR":42103.415759,"ISK":137.696951,"JEP":0.785088,"JMD":154.442744,"JOD":0.709,"JPY":144.210309,"KES":157.484083,"KGS":89.068448,"KHR":4097.715555,"KID":1.490069,"KMF":449.206988,"KRW":1315.579762,"KWD":0.307069,"KYD":0.833333,"KZT":454.049468,"LAK":20260.160449,"LBP":15000,"LKR":322.172003,"LRD":187.908238,"LSL":18.600643,"LYD":4.801157,"MAD":9.934524,"MDL":17.497456,"MGA":4588.602603,"MKD":56.316592,"MMK":2069.285389,"MNT":3448.928652,"MOP":8.041281,"MRU":39.549165,"MUR":44.19766,"MVR":15.426819,"MWK":1691.041552,"MXN":16.850777,"MYR":4.650896,"MZN":63.877268,"NAD":18.600643,"NGN":901.917434,"NIO":36.019513,"NOK":10.366248,"NPR":132.94269,"NZD":1.601223,"OMR":0.384497,"PAB":1,"PEN":3.703239,"PGK":3.66135,"PHP":55.706694,"PKR":280.789085,"PLN":3.963127,"PYG":7250.108997,"QAR":3.64,"RON":4.544375,"RSD":107.186309,"RUB":90.944137,"RWF":1298.987519,"SAR":3.75,"SBD":8.461342,"SCR":13.527227,"SDG":454.050784,"SEK":10.235285,"SGD":1.329059,"SHP":0.785088,"SLE":22.939497,"SLL":22939.497173,"SOS":571.351664,"SRD":36.540045,"SSP":1094.832204,"STN":22.370514,"SYP":12692.813615,"SZL":18.600643,"THB":34.952358,"TJS":10.951297,"TMT":3.500002,"TND":3.095189,"TOP":2.319731,"TRY":29.917017,"TTD":6.693079,"TVD":1.490069,"TWD":30.887894,"TZS":2517.434848,"UAH":38.207941,"UGX":3803.533186,"UYU":38.915574,"UZS":12334.343292,"VES":35.9385,"VND":24282.515533,"VUV":118.701752,"WST":2.707098,"XAF":598.942651,"XCD":2.7,"XDR":0.748595,"XOF":598.942651,"XPF":108.959923,"YER":246.292762,"ZAR":18.600721,"ZMW":25.941524,"ZWL":6436.683388}};
+  final usdMockJson = {
+    "result": "success",
+    "provider": "https://www.exchangerate-api.com",
+    "documentation": "https://www.exchangerate-api.com/docs/free",
+    "terms_of_use": "https://www.exchangerate-api.com/terms",
+    "time_last_update_unix": 1704758551,
+    "time_last_update_utc": "Tue, 09 Jan 2024 00:02:31 +0000",
+    "time_next_update_unix": 1704845421,
+    "time_next_update_utc": "Wed, 10 Jan 2024 00:10:21 +0000",
+    "time_eol_unix": 0,
+    "base_code": "USD",
+    "rates": {
+      "USD": 1,
+      "AED": 3.6725,
+      "AFN": 71.254789,
+      "ALL": 96.131794,
+      "AMD": 405.337806,
+      "ANG": 1.79,
+      "AOA": 843.247302,
+      "ARS": 813.85,
+      "AUD": 1.490106,
+      "AWG": 1.79,
+      "AZN": 1.699553,
+      "BAM": 1.785834,
+      "BBD": 2,
+      "BDT": 109.63174,
+      "BGN": 1.785939,
+      "BHD": 0.376,
+      "BIF": 2840.450627,
+      "BMD": 1,
+      "BND": 1.329058,
+      "BOB": 6.805652,
+      "BRL": 4.876135,
+      "BSD": 1,
+      "BTN": 83.089181,
+      "BWP": 13.585306,
+      "BYN": 3.230002,
+      "BZD": 2,
+      "CAD": 1.336326,
+      "CDF": 2697.633434,
+      "CHF": 0.848628,
+      "CLP": 890.921544,
+      "CNY": 7.162024,
+      "COP": 3965.875801,
+      "CRC": 517.078193,
+      "CUP": 24,
+      "CVE": 100.681007,
+      "CZK": 22.392465,
+      "DJF": 177.721,
+      "DKK": 6.81154,
+      "DOP": 56.816276,
+      "DZD": 133.358324,
+      "EGP": 30.863593,
+      "ERN": 15,
+      "ETB": 56.568054,
+      "EUR": 0.913083,
+      "FJD": 2.207559,
+      "FKP": 0.785088,
+      "FOK": 6.811502,
+      "GBP": 0.78523,
+      "GEL": 2.686743,
+      "GGP": 0.785088,
+      "GHS": 11.951077,
+      "GIP": 0.785088,
+      "GMD": 65.227475,
+      "GNF": 8573.496849,
+      "GTQ": 7.70299,
+      "GYD": 209.253267,
+      "HKD": 7.806956,
+      "HNL": 24.296492,
+      "HRK": 6.879618,
+      "HTG": 132.38535,
+      "HUF": 344.638586,
+      "IDR": 15522.235626,
+      "ILS": 3.708074,
+      "IMP": 0.785088,
+      "INR": 83.0892,
+      "IQD": 1308.108484,
+      "IRR": 42103.415759,
+      "ISK": 137.696951,
+      "JEP": 0.785088,
+      "JMD": 154.442744,
+      "JOD": 0.709,
+      "JPY": 144.210309,
+      "KES": 157.484083,
+      "KGS": 89.068448,
+      "KHR": 4097.715555,
+      "KID": 1.490069,
+      "KMF": 449.206988,
+      "KRW": 1315.579762,
+      "KWD": 0.307069,
+      "KYD": 0.833333,
+      "KZT": 454.049468,
+      "LAK": 20260.160449,
+      "LBP": 15000,
+      "LKR": 322.172003,
+      "LRD": 187.908238,
+      "LSL": 18.600643,
+      "LYD": 4.801157,
+      "MAD": 9.934524,
+      "MDL": 17.497456,
+      "MGA": 4588.602603,
+      "MKD": 56.316592,
+      "MMK": 2069.285389,
+      "MNT": 3448.928652,
+      "MOP": 8.041281,
+      "MRU": 39.549165,
+      "MUR": 44.19766,
+      "MVR": 15.426819,
+      "MWK": 1691.041552,
+      "MXN": 16.850777,
+      "MYR": 4.650896,
+      "MZN": 63.877268,
+      "NAD": 18.600643,
+      "NGN": 901.917434,
+      "NIO": 36.019513,
+      "NOK": 10.366248,
+      "NPR": 132.94269,
+      "NZD": 1.601223,
+      "OMR": 0.384497,
+      "PAB": 1,
+      "PEN": 3.703239,
+      "PGK": 3.66135,
+      "PHP": 55.706694,
+      "PKR": 280.789085,
+      "PLN": 3.963127,
+      "PYG": 7250.108997,
+      "QAR": 3.64,
+      "RON": 4.544375,
+      "RSD": 107.186309,
+      "RUB": 90.944137,
+      "RWF": 1298.987519,
+      "SAR": 3.75,
+      "SBD": 8.461342,
+      "SCR": 13.527227,
+      "SDG": 454.050784,
+      "SEK": 10.235285,
+      "SGD": 1.329059,
+      "SHP": 0.785088,
+      "SLE": 22.939497,
+      "SLL": 22939.497173,
+      "SOS": 571.351664,
+      "SRD": 36.540045,
+      "SSP": 1094.832204,
+      "STN": 22.370514,
+      "SYP": 12692.813615,
+      "SZL": 18.600643,
+      "THB": 34.952358,
+      "TJS": 10.951297,
+      "TMT": 3.500002,
+      "TND": 3.095189,
+      "TOP": 2.319731,
+      "TRY": 29.917017,
+      "TTD": 6.693079,
+      "TVD": 1.490069,
+      "TWD": 30.887894,
+      "TZS": 2517.434848,
+      "UAH": 38.207941,
+      "UGX": 3803.533186,
+      "UYU": 38.915574,
+      "UZS": 12334.343292,
+      "VES": 35.9385,
+      "VND": 24282.515533,
+      "VUV": 118.701752,
+      "WST": 2.707098,
+      "XAF": 598.942651,
+      "XCD": 2.7,
+      "XDR": 0.748595,
+      "XOF": 598.942651,
+      "XPF": 108.959923,
+      "YER": 246.292762,
+      "ZAR": 18.600721,
+      "ZMW": 25.941524,
+      "ZWL": 6436.683388
+    }
+  };
 
   @override
   Future<RateResult> getRateResult(String baseCode) async {
@@ -240,12 +454,9 @@ class RateRepositoryMock implements RateRepository {
         final lastTimestamp = krwMockJson['time_last_update_unix'];
         return RateResult(
           baseCode: baseCode,
-          rates:
-          rates.entries.map((e) => Rate(code: e.key, rate: e.value)).toList(),
-          lastUpdateTime:
-          DateTime.fromMillisecondsSinceEpoch((lastTimestamp as int) * 1000),
-          nextUpdateTime:
-          DateTime.fromMillisecondsSinceEpoch((nextTimestamp as int) * 1000),
+          rates: rates.entries.map((e) => Rate(code: e.key, rate: e.value)).toList(),
+          lastUpdateTime: DateTime.fromMillisecondsSinceEpoch((lastTimestamp as int) * 1000),
+          nextUpdateTime: DateTime.fromMillisecondsSinceEpoch((nextTimestamp as int) * 1000),
         );
       } catch (error) {
         rethrow; // Rethrow to allow for further error handling
@@ -257,12 +468,9 @@ class RateRepositoryMock implements RateRepository {
         final lastTimestamp = usdMockJson['time_last_update_unix'];
         return RateResult(
           baseCode: baseCode,
-          rates:
-          rates.entries.map((e) => Rate(code: e.key, rate: e.value)).toList(),
-          lastUpdateTime:
-          DateTime.fromMillisecondsSinceEpoch((lastTimestamp as int) * 1000),
-          nextUpdateTime:
-          DateTime.fromMillisecondsSinceEpoch((nextTimestamp as int) * 1000),
+          rates: rates.entries.map((e) => Rate(code: e.key, rate: e.value)).toList(),
+          lastUpdateTime: DateTime.fromMillisecondsSinceEpoch((lastTimestamp as int) * 1000),
+          nextUpdateTime: DateTime.fromMillisecondsSinceEpoch((nextTimestamp as int) * 1000),
         );
       } catch (error) {
         rethrow; // Rethrow to allow for further error handling

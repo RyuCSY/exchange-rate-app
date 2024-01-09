@@ -23,32 +23,54 @@ class MainViewModel extends ChangeNotifier {
   }
 
   void inputBaseMoney(num baseMoney) {
+    var rate = state.rateResult!.rates.firstWhere((rate) => rate.code == state.targetCode).rate;
+
     _state = state.copyWith(
       baseMoney: baseMoney,
-      targetMoney: baseMoney *
-          state.rateResult!.rates
-              .firstWhere((rate) => rate.code == state.targetCode)
-              .rate,
+      targetMoney: baseMoney * rate,
     );
     notifyListeners();
   }
 
   void inputBaseCode(String baseCode) async {
-    _state = state.copyWith(baseCode: baseCode);
+    if (baseCode == _state.targetCode) {
+      _state = state.copyWith(baseCode: baseCode, targetCode: _state.baseCode);
+    } else {
+      _state = state.copyWith(baseCode: baseCode);
+    }
 
     await _updateRateResult(baseCode);
 
-    _state = state.copyWith(
-      targetMoney: state.baseMoney *
-          state.rateResult!.rates
-              .firstWhere((rate) => rate.code == state.targetCode)
-              .rate,
-    );
+    var rate = state.rateResult!.rates.firstWhere((rate) => rate.code == state.targetCode).rate;
+
+    _state = state.copyWith(targetMoney: state.baseMoney * rate);
 
     notifyListeners();
   }
 
-  void targetBaseMoney(num baseMoney) {}
+  void targetBaseMoney(num targetMoney) async {
+    var rate = state.rateResult!.rates.firstWhere((rate) => rate.code == state.targetCode).rate;
 
-  void targetBaseCode(String baseCode) {}
+    _state = state.copyWith(
+      targetMoney: targetMoney,
+      baseMoney: targetMoney / rate,
+    );
+    notifyListeners();
+  }
+
+  void targetBaseCode(String targetCode) async {
+    if (targetCode == _state.baseCode) {
+      await _updateRateResult(state.baseCode);
+      _state = state.copyWith(baseCode: _state.targetCode, targetCode: targetCode);
+    } else {
+      _state = state.copyWith(targetCode: targetCode);
+    }
+    var rate = state.rateResult!.rates.firstWhere((rate) => rate.code == state.targetCode).rate;
+
+    _state = state.copyWith(
+      baseMoney: state.targetMoney / rate,
+    );
+
+    notifyListeners();
+  }
 }
