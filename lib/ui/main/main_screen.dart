@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+const krw = 'KRW';
+const usd = 'USD';
+const defaultAmount = '1000';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -6,14 +11,22 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final List<String> _currencyList = [krw, usd];
+
   // 기준 통화
-  String _baseCurrency = 'KRW';
+  String _baseCurrency = krw;
+
   // 대상 통화
-  String _targetCurrency = 'USD';
+  String _targetCurrency = usd;
+
   // 기준 통화 금액
-  double _baseAmount = 1000.0;
+  num _baseAmount = int.parse(defaultAmount);
+
   // 대상 통화 금액
-  double _targetAmount = 0.0;
+  num _targetAmount = 0.0;
+
+  TextEditingController _baseInputControl = TextEditingController(text: defaultAmount);
+  TextEditingController _targetInputControl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +40,7 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             // 기준 통화 금액 입력 필드
             TextField(
+              controller: _baseInputControl,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: '기준 통화 금액',
@@ -41,27 +55,11 @@ class _MainScreenState extends State<MainScreen> {
               onChanged: (value) {
                 _baseCurrency = value!;
               },
-              items: [
-                DropdownMenuItem(
-                  value: 'KRW',
-                  child: Text('KRW'),
-                ),
-                DropdownMenuItem(
-                  value: 'USD',
-                  child: Text('USD'),
-                ),
-                DropdownMenuItem(
-                  value: 'EUR',
-                  child: Text('EUR'),
-                ),
-                DropdownMenuItem(
-                  value: 'JPY',
-                  child: Text('JPY'),
-                ),
-              ],
+              items: _currencyList.map((e) => buildDropdownMenuItem(e)).toList(),
             ),
             // 대상 통화 금액 입력 필드
             TextField(
+              controller: _targetInputControl,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: '대상 통화 금액',
@@ -74,28 +72,19 @@ class _MainScreenState extends State<MainScreen> {
                 _targetCurrency = value!;
                 _updateTargetAmount();
               },
-              items: [
-                DropdownMenuItem(
-                  value: 'KRW',
-                  child: Text('KRW'),
-                ),
-                DropdownMenuItem(
-                  value: 'USD',
-                  child: Text('USD'),
-                ),
-                DropdownMenuItem(
-                  value: 'EUR',
-                  child: Text('EUR'),
-                ),
-                DropdownMenuItem(
-                  value: 'JPY',
-                  child: Text('JPY'),
-                ),
-              ],
+              items: _currencyList.map((e) => buildDropdownMenuItem(e)).toList(),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  DropdownMenuItem<String> buildDropdownMenuItem(String currency) {
+    currency = currency.toUpperCase();
+    return DropdownMenuItem(
+      value: currency,
+      child: Text(currency),
     );
   }
 
@@ -107,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
     _targetAmount = _baseAmount * rate;
     // 대상 통화 금액 입력 필드를 업데이트합니다.
     setState(() {
-      _targetAmount = _targetAmount;
+      _targetInputControl.text = '$_targetAmount';
     });
   }
 
